@@ -1,0 +1,67 @@
+
+// પ્રોડક્ટ ડેટા
+const products = [
+    { id: 1, name: "Smartphone", price: 699, img: "https://placeholder.com" },
+    { id: 2, name: "Laptop Pro", price: 1200, img: "https://placeholder.com" },
+    { id: 3, name: "Wireless Headphones", price: 150, img: "https://placeholder.com" },
+    { id: 4, name: "Smart Watch", price: 250, img: "https://placeholder.com" }
+];
+
+let cart = [];
+
+// પ્રોડક્ટ્સ ને પેજ પર બતાવવા માટે
+function displayProducts() {
+    const productDisplay = document.getElementById('product-display');
+    productDisplay.innerHTML = products.map(product => `
+        <div class="product-card">
+            <img src="${product.img}" alt="${product.name}">
+            <h3>${product.name}</h3>
+            <p class="price">$${product.price}</p>
+            <button class="add-btn" onclick="addToCart(${product.id})">Add to Cart</button>
+        </div>
+    `).join('');
+}
+
+// કાર્ટમાં આઈટમ ઉમેરવા માટે
+function addToCart(id) {
+    const item = products.find(p => p.id === id);
+    cart.push(item);
+    updateCartUI();
+}
+
+// કાર્ટ અપડેટ કરવા માટે
+function updateCartUI() {
+    document.getElementById('cart-count').innerText = cart.length;
+    const cartItemsContainer = document.getElementById('cart-items-container');
+    const totalPriceElement = document.getElementById('total-price');
+
+    cartItemsContainer.innerHTML = cart.map((item, index) => `
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+            <span>${item.name}</span>
+            <span>$${item.price}</span>
+        </div>
+    `).join('');
+
+    const total = cart.reduce((sum, item) => sum + item.price, 0);
+    totalPriceElement.innerText = total;
+}
+
+// કાર્ટ ખોલવા/બંધ કરવા માટે
+function toggleCart() {
+    document.getElementById('cart-sidebar').classList.toggle('active');
+}
+
+// ચેકઆઉટ ફંક્શન
+function checkout() {
+    if(cart.length === 0) {
+        alert("તમારું કાર્ટ ખાલી છે!");
+    } else {
+        alert("ઓર્ડર સફળતાપૂર્વક અપાઈ ગયો છે! આભાર.");
+        cart = [];
+        updateCartUI();
+        toggleCart();
+    }
+}
+
+// પેજ લોડ થાય ત્યારે પ્રોડક્ટ્સ બતાવો
+displayProducts();
